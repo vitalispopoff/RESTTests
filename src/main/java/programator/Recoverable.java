@@ -12,7 +12,7 @@ public interface Recoverable {
 
        public static void serializeIt(){
         try {
-            FileOutputStream fos = new FileOutputStream("LotteryTicketPool.txt");
+            FileOutputStream fos = new FileOutputStream("LotteryTicketPool.srl");
             ObjectOutputStream oos = new ObjectOutputStream(fos);
 //            oos.writeObject(ticketPool);
             oos.writeObject(TicketPool.ticketMap);

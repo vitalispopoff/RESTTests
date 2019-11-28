@@ -6,7 +6,6 @@ import java.io.File;
 import java.io.IOException;
 
 import static programator.Recoverable.deserializeIt;
-//import static programator.betPool.TicketPool.setTicketPool;
 
 public class LottoApp extends NanoHTTPD {
 
@@ -20,7 +19,7 @@ public class LottoApp extends NanoHTTPD {
 
     public static void main(String[] args) {
 
-        if (new File("LotteryTicketPool.txt").exists()) {
+        if (new File("LotteryTicketPool.srl").exists()) {
             try {
                 deserializeIt();
             } catch (Exception e) {
