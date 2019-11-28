@@ -43,18 +43,7 @@ public class Controller implements Serializable {
 
             ticketPool.addTicket(requestTicket, requestTicket.getBettor(), requestTicket.getAgent());
 
-            serializeIt();    //TODO
-
-           /* try {
-                FileOutputStream fos = new FileOutputStream("LotteryTicketPool.txt");
-                ObjectOutputStream oos = new ObjectOutputStream(fos);
-                oos.writeObject(ticketPool.getAllTickets());
-                oos.close();
-                fos.close();
-
-            } catch (Exception e) {
-                System.out.println("Internal Error in serialization process. Please come back later.");
-            }*/     // inner serialization - we no likes it
+            serializeIt();
 
         } catch (Exception e) {
             System.err.println("Error in the request process:\n" + e);
@@ -85,7 +74,6 @@ public class Controller implements Serializable {
                     "Internal error, can't read all the tickets, not at once"
             );
         }
-
         return newFixedLengthResponse(
                 OK,
                 "application/json",
@@ -116,7 +104,6 @@ public class Controller implements Serializable {
                     ObjectMapper objectMapper = new ObjectMapper();
                     String response = objectMapper.writeValueAsString(ticket);
 
-//                    serializeIt();    //TODO
 
                     return newFixedLengthResponse(
                             OK,
@@ -162,6 +149,9 @@ public class Controller implements Serializable {
             if (ticket != null) {
                 try {
                     ticketPool.checkTicket(ticketId);
+
+                    serializeIt();
+
                     return newFixedLengthResponse(
                             OK,
                             "application/json",
@@ -181,14 +171,16 @@ public class Controller implements Serializable {
         return newFixedLengthResponse(BAD_REQUEST, "text/plain", "Uncorrected request params");
     }
 
-/*    public Response serveRemoveTicketRequest(IHTTPSession session) {
+    public Response serveRemoveTicketRequest(IHTTPSession session) {
+
+        long ticketId = 0;
 
         Map<String, List<String>> requestParameters = session.getParameters();
 
         if (requestParameters.containsKey(TICKET_ID_PARAMETER_NAME)) {
             List<String> ticketIdParameters = requestParameters.get(TICKET_ID_PARAMETER_NAME);
             String ticketIdParameter = ticketIdParameters.get(0);
-            long ticketId = 0;
+
 
             try {
                 ticketId = Long.parseLong(ticketIdParameter);
@@ -199,33 +191,13 @@ public class Controller implements Serializable {
                         "Request parameter 'ticketId' gotta be a number");
             }
 
-            TicketPool.removeTicket()
-            try
+            ticketPool.removeTicket(ticketId);
+            serializeIt();
+
         }
+        return newFixedLengthResponse(OK, "application/json", "Ticket " + ticketId + "has been removed.");
+    }
 
-    }*/
-
-/*    public static List<Ticket> deserializeLotteryTicketPool() {
-        List<Ticket> deserializeLotteryTicketPool = null;
-        System.out.println("Please wait, entering backup.");
-        try {
-
-            FileInputStream fis = new FileInputStream("LotteryTicketPool.txt");
-            ObjectInputStream ois = new ObjectInputStream(fis);
-
-            deserializeLotteryTicketPool = (List<Ticket>) ois.readObject();
-            ois.close();
-            fis.close();
-        } catch (FileNotFoundException e) {
-            System.err.println("Error, backup not found: \n" + e);
-        } catch (IOException e) {
-            System.err.println("IO IO! It's da sound of da police! \n" + e);
-        } catch (ClassNotFoundException e) {
-            System.err.println("No idea what that even means... \n" + e);
-        }
-
-        return deserializeLotteryTicketPool;
-    }*/     // deserialization we no know
 
 }
 

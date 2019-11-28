@@ -111,6 +111,65 @@
 				"description": "processing of a particular ticket"
 			},
 			"response": []
+		},
+		{
+			"name": "http://localhost:8080/ticket/add  another",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"numbers\": \"10, 17, 22, 26, 31, 40\",\n\t\"bettor\": {\t\n\t\t\"bettorLogin\": \"siwy\"\n\t\t},\n\t\"agent\": {\n\t\t\"name\": \"monopol\"\n\t\t}\n}\n"
+				},
+				"url": {
+					"raw": "http://localhost:8080/ticket/add",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"ticket",
+						"add"
+					]
+				},
+				"description": "another add query"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/ticket/del?ticketId=1574967605349",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/ticket/del?ticketId=1574967605349",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"ticket",
+						"del"
+					],
+					"query": [
+						{
+							"key": "ticketId",
+							"value": "1574967605349"
+						}
+					]
+				},
+				"description": "removing query"
+			},
+			"response": []
 		}
 	],
 	"protocolProfileBehavior": {}

@@ -14,6 +14,7 @@ public class RequestUrlMapper {
     private final static String ALL_TICKETS = "/ticket/getAll";
     private final static String GET_TICKET = "/ticket/get";
     private final static String CHECK_TICKET = "/ticket/check";
+    private final static String DELETE_TICKET = "/ticket/del";
 
     public NanoHTTPD.Response delegateRequest(IHTTPSession session) {
 
@@ -27,6 +28,8 @@ public class RequestUrlMapper {
             return controller.serveGetTicketRequest(session);
         } else if (POST.equals(session.getMethod()) && CHECK_TICKET.equals(session.getUri())) {
             return controller.serveCheckTicketRequest(session);
+        } else if (GET.equals(session.getMethod())&& DELETE_TICKET.equals(session.getUri())){
+            return controller.serveRemoveTicketRequest(session);
         }
 
         return NanoHTTPD.newFixedLengthResponse(NOT_FOUND, "text/plain", "Not Found");
