@@ -2,7 +2,9 @@ package programator;
 
 import fi.iki.elonen.NanoHTTPD;
 
+import java.io.File;
 import java.io.IOException;
+//import static programator.betPool.TicketPool.setTicketPool;
 
 public class LottoApp extends NanoHTTPD {
 
@@ -10,12 +12,18 @@ public class LottoApp extends NanoHTTPD {
 
     public LottoApp(int port) throws IOException {
         super(port);
-        start(1000,false);
+        start(1000, false);
         System.out.println("Server is on");
     }
 
     public static void main(String[] args) {
-        try{
+
+        File file = new File("LotteryTicketPool.txt");
+        if (file.exists()) {
+//            new Controller().setTicketPool(Controller.deserializeLotteryTicketPool());
+        }
+
+        try {
             new LottoApp(8080);
 
         } catch (IOException e) {
@@ -24,8 +32,7 @@ public class LottoApp extends NanoHTTPD {
     }
 
     @Override
-    public Response serve(IHTTPSession session)
-    {
+    public Response serve(IHTTPSession session) {
         return requestUrlMapper.delegateRequest(session);
     }
 }

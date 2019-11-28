@@ -3,20 +3,27 @@ package programator.control;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import programator.betPool.TicketPool;
-import programator.betPool.Poolable;
 import programator.types.Ticket;
 
+import java.io.*;
 import java.util.List;
 import java.util.Map;
 
 import static fi.iki.elonen.NanoHTTPD.*;
 import static fi.iki.elonen.NanoHTTPD.Response.Status.*;
 
-public class Controller {
+public class Controller implements Serializable {
 
     private final static String TICKET_ID_PARAMETER_NAME = "ticketId";
+    private TicketPool ticketPool = new TicketPool();
 
-    private Poolable ticketPool = new TicketPool();
+    public TicketPool getTicketPool(){
+        return ticketPool;
+    }
+
+    public void setTicketPool(TicketPool ticketPool){
+        this.ticketPool = ticketPool;
+    }
 
     public Response serveAddTicketRequest(IHTTPSession session) {
 
@@ -34,6 +41,18 @@ public class Controller {
             requestTicket.setTicketId(theTicketId);
 
             ticketPool.addTicket(requestTicket, requestTicket.getBettor(), requestTicket.getAgent());
+
+            try {
+                FileOutputStream fos = new FileOutputStream("LotteryTicketPool.txt");
+                ObjectOutputStream oos = new ObjectOutputStream(fos);
+                oos.writeObject(ticketPool.getAllTickets());
+                oos.close();
+                fos.close();
+
+            } catch (Exception e) {
+                System.out.println("Internal Error in serialization process. Please come back later.");
+            }
+
         } catch (Exception e) {
             System.err.println("Error in the request process:\n" + e);
             return newFixedLengthResponse(
@@ -160,5 +179,28 @@ public class Controller {
 
         return newFixedLengthResponse(BAD_REQUEST, "text/plain", "Uncorrected request params");
     }
+
+    public static List<Ticket> deserializeLotteryTicketPool() {
+        List<Ticket> deserializeLotteryTicketPool = null;
+        System.out.println("Please wait, entering backup.");
+        try {
+
+            FileInputStream fis = new FileInputStream("LotteryTicketPool.txt");
+            ObjectInputStream ois = new ObjectInputStream(fis);
+
+            deserializeLotteryTicketPool = (List<Ticket>) ois.readObject();
+            ois.close();
+            fis.close();
+        } catch (FileNotFoundException e) {
+            System.err.println("Error, backup not found: \n" + e);
+        } catch (IOException e) {
+            System.err.println("IO IO! It's da sound of da police! \n" + e);
+        } catch (ClassNotFoundException e) {
+            System.err.println("No idea what that even means... \n" + e);
+        }
+
+        return deserializeLotteryTicketPool;
+    }
+
 }
 

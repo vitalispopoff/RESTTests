@@ -4,10 +4,11 @@ import programator.types.Bettor;
 import programator.types.LotteryAgent;
 import programator.types.Ticket;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TicketPool implements Poolable {
+public class TicketPool implements Poolable, Serializable {
 
     private static Map<Long, Ticket> ticketMap = new HashMap<>();
     private static Map<String, Bettor> bettorMap = new HashMap<String, Bettor>();

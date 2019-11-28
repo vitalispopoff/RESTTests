@@ -1,0 +1,117 @@
+{
+	"info": {
+		"_postman_id": "ebe0d2a4-efa1-4a89-8c45-79651560f24a",
+		"name": "Kolektura",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "http://localhost:8080/bet/getAll",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/ticket/getAll",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"ticket",
+						"getAll"
+					]
+				},
+				"description": "listing zakładów"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/ticket/add",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"numbers\": \"1, 12, 32, 36, 39, 41\",\n\t\"bettor\": {\t\n\t\t\"bettorLogin\": \"łysy\"\n\t\t},\n\t\"agent\": {\n\t\t\"name\": \"sklep u zbyszka\"\n\t\t}\n}\n"
+				},
+				"url": {
+					"raw": "http://localhost:8080/ticket/add",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"ticket",
+						"add"
+					]
+				},
+				"description": "adding a ticket to the pool"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/ticket/get?ticketId=1574939138825",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:8080/ticket/get?ticketId=1574939138825",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"ticket",
+						"get"
+					],
+					"query": [
+						{
+							"key": "ticketId",
+							"value": "1574939138825"
+						}
+					]
+				},
+				"description": "query for a particular ticket"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/ticket/check?ticketId=1574939138825",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/ticket/check?ticketId=1574939138825",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"ticket",
+						"check"
+					],
+					"query": [
+						{
+							"key": "ticketId",
+							"value": "1574939138825"
+						}
+					]
+				},
+				"description": "processing of a particular ticket"
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
