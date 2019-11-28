@@ -1,10 +1,11 @@
 package programator;
 
 import fi.iki.elonen.NanoHTTPD;
-import programator.control.Controller;
 
 import java.io.File;
 import java.io.IOException;
+
+import static programator.Recoverable.deserializeIt;
 //import static programator.betPool.TicketPool.setTicketPool;
 
 public class LottoApp extends NanoHTTPD {
@@ -20,8 +21,11 @@ public class LottoApp extends NanoHTTPD {
     public static void main(String[] args) {
 
         if (new File("LotteryTicketPool.txt").exists()) {
-            Controller.deserializeIt();
-
+            try {
+                deserializeIt();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         try {

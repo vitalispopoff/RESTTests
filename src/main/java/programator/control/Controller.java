@@ -3,21 +3,20 @@ package programator.control;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import programator.betPool.TicketPool;
-import programator.types.Bettor;
-import programator.types.LotteryAgent;
 import programator.types.Ticket;
 
-import java.io.*;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
 import static fi.iki.elonen.NanoHTTPD.*;
 import static fi.iki.elonen.NanoHTTPD.Response.Status.*;
+import static programator.Recoverable.serializeIt;
 
 public class Controller implements Serializable {
 
     private final static String TICKET_ID_PARAMETER_NAME = "ticketId";
-    private static TicketPool ticketPool = new TicketPool();
+    private /*static*/ TicketPool ticketPool = new TicketPool();
 
     public TicketPool getTicketPool() {
         return ticketPool;
@@ -44,7 +43,8 @@ public class Controller implements Serializable {
 
             ticketPool.addTicket(requestTicket, requestTicket.getBettor(), requestTicket.getAgent());
 
-            serializeIt();
+            serializeIt();    //TODO
+
            /* try {
                 FileOutputStream fos = new FileOutputStream("LotteryTicketPool.txt");
                 ObjectOutputStream oos = new ObjectOutputStream(fos);
@@ -115,7 +115,9 @@ public class Controller implements Serializable {
                 try {
                     ObjectMapper objectMapper = new ObjectMapper();
                     String response = objectMapper.writeValueAsString(ticket);
-                    serializeIt();
+
+//                    serializeIt();    //TODO
+
                     return newFixedLengthResponse(
                             OK,
                             "application/json",
@@ -225,40 +227,5 @@ public class Controller implements Serializable {
         return deserializeLotteryTicketPool;
     }*/     // deserialization we no know
 
-    public void serializeIt(){
-        try {
-            FileOutputStream fos = new FileOutputStream("LotteryTicketPool.txt");
-            ObjectOutputStream oos = new ObjectOutputStream(fos);
-            oos.writeObject(ticketPool);
-            oos.writeObject(ticketPool.ticketMap);
-            oos.writeObject(ticketPool.bettorMap);
-            oos.writeObject(ticketPool.agentMap);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    public static void deserializeIt(){
-
-        try {
-            FileInputStream fis = new FileInputStream("LotteryTicketPool.txt");
-            ObjectInputStream ois = new ObjectInputStream(fis);
-            ticketPool = (TicketPool) ois.readObject();
-            ticketPool.ticketMap = (Map<Long, Ticket>) ois.readObject();
-            ticketPool.bettorMap = (Map<String, Bettor>) ois.readObject();
-            ticketPool.agentMap = (Map<Long, LotteryAgent>) ois.readObject();
-            ois.close();
-            fis.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
 }
 
