@@ -117,6 +117,48 @@ public class Controller {
     }
 
     public Response serveCheckTicketRequest(IHTTPSession session) {
-        return null;
+
+        Map<String, List<String>> requestParameters = session.getParameters();
+
+        if (requestParameters.containsKey(TICKET_ID_PARAMETER_NAME)) {
+            List<String> ticketIdParameters = requestParameters.get(TICKET_ID_PARAMETER_NAME);          // ? wartość ticketId zapamiętana jako element listy będącej elementem mapy requestParameters (?)
+            String ticketIdParameter = ticketIdParameters.get(0);
+            long ticketId = 0;
+
+            try {
+                ticketId = Long.parseLong(ticketIdParameter);
+            } catch (NumberFormatException nfe) {
+                return newFixedLengthResponse(
+                        BAD_REQUEST,
+                        "text/plain",
+                        "Request parameter 'ticketId' gotta be a number"
+                );
+            }
+
+            Ticket ticket = ticketPool.getTicket(ticketId);
+            if (ticket != null) {
+                try {
+                    ticketPool.checkTicket(ticketId);
+                    return newFixedLengthResponse(
+                            OK,
+                            "application/json",
+                            "Ticket " + ticketId + " has been checked. You have successfully failed.");
+
+                } catch (Exception e) {
+                    System.err.println("Error in request process:\n" + e);
+                    return newFixedLengthResponse(
+                            INTERNAL_ERROR,
+                            "text/plain",
+                            "I'm sorry Dave, I'm afraid i can't do that. \n¯\\_(ツ)_/¯"
+                    );
+                }
+            }
+
+            return newFixedLengthResponse(NOT_FOUND, "application/json", "Ticket " + ticketId + " not found. ¯\\_(ツ)_/¯");
+
+        }
+
+        return newFixedLengthResponse(BAD_REQUEST, "text/plain", "Uncorrected request params");
     }
 }
+

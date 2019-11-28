@@ -9,7 +9,10 @@ import java.util.Map;
 
 public interface Poolable {
 
-    void addTicket(Ticket ticket, Bettor bettor, LotteryAgent agent);
+    void addTicket(
+            Ticket ticket,
+            Bettor bettor,
+            LotteryAgent agent);
 
     Map<Long, Ticket> getAllTickets();
 

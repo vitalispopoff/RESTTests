@@ -8,7 +8,6 @@ public class LottoApp extends NanoHTTPD {
 
     RequestUrlMapper requestUrlMapper = new RequestUrlMapper();
 
-
     public LottoApp(int port) throws IOException {
         super(port);
         start(1000,false);
@@ -28,6 +27,5 @@ public class LottoApp extends NanoHTTPD {
     public Response serve(IHTTPSession session)
     {
         return requestUrlMapper.delegateRequest(session);
-
     }
 }
