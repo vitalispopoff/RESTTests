@@ -10,9 +10,19 @@ import java.util.Map;
 
 public class TicketPool implements Poolable, Serializable {
 
-    private static Map<Long, Ticket> ticketMap = new HashMap<>();
+    /*private static Map<Long, Ticket> ticketMap = new HashMap<>();
     private static Map<String, Bettor> bettorMap = new HashMap<String, Bettor>();
-    private static Map<Long, LotteryAgent> agentMap = new HashMap<>();
+    private static Map<Long, LotteryAgent> agentMap = new HashMap<>();*/
+
+    /*private*/ public Map<Long, Ticket> ticketMap;
+    /*private*/ public Map<String, Bettor> bettorMap;
+    /*private*/ public Map<Long, LotteryAgent> agentMap;
+
+    public TicketPool() {
+        this.ticketMap = new HashMap<>();
+        this.bettorMap = new HashMap<String, Bettor>();
+        this.agentMap = new HashMap<>();
+    }
 
 
     @Override
@@ -40,7 +50,7 @@ public class TicketPool implements Poolable, Serializable {
     }
 
     @Override
-    public void removeTicket(Long ticketId){
+    public void removeTicket(Long ticketId) {
         ticketMap.remove(ticketId);
     }
 

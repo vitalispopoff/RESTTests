@@ -2,8 +2,9 @@ package programator.control;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import programator.betPool.Poolable;
 import programator.betPool.TicketPool;
+import programator.types.Bettor;
+import programator.types.LotteryAgent;
 import programator.types.Ticket;
 
 import java.io.*;
@@ -16,7 +17,7 @@ import static fi.iki.elonen.NanoHTTPD.Response.Status.*;
 public class Controller implements Serializable {
 
     private final static String TICKET_ID_PARAMETER_NAME = "ticketId";
-    private TicketPool ticketPool = new TicketPool();
+    private static TicketPool ticketPool = new TicketPool();
 
     public TicketPool getTicketPool() {
         return ticketPool;
@@ -43,7 +44,8 @@ public class Controller implements Serializable {
 
             ticketPool.addTicket(requestTicket, requestTicket.getBettor(), requestTicket.getAgent());
 
-            try {
+            serializeIt();
+           /* try {
                 FileOutputStream fos = new FileOutputStream("LotteryTicketPool.txt");
                 ObjectOutputStream oos = new ObjectOutputStream(fos);
                 oos.writeObject(ticketPool.getAllTickets());
@@ -52,7 +54,7 @@ public class Controller implements Serializable {
 
             } catch (Exception e) {
                 System.out.println("Internal Error in serialization process. Please come back later.");
-            }
+            }*/     // inner serialization - we no likes it
 
         } catch (Exception e) {
             System.err.println("Error in the request process:\n" + e);
@@ -113,6 +115,7 @@ public class Controller implements Serializable {
                 try {
                     ObjectMapper objectMapper = new ObjectMapper();
                     String response = objectMapper.writeValueAsString(ticket);
+                    serializeIt();
                     return newFixedLengthResponse(
                             OK,
                             "application/json",
@@ -129,7 +132,6 @@ public class Controller implements Serializable {
             }
 
             return newFixedLengthResponse(NOT_FOUND, "application/json", "¯\\_(ツ)_/¯");
-
         }
 
         return newFixedLengthResponse(BAD_REQUEST, "text/plain", "Uncorrected request params");
@@ -172,15 +174,12 @@ public class Controller implements Serializable {
                     );
                 }
             }
-
             return newFixedLengthResponse(NOT_FOUND, "application/json", "Ticket " + ticketId + " not found. ¯\\_(ツ)_/¯");
-
         }
-
         return newFixedLengthResponse(BAD_REQUEST, "text/plain", "Uncorrected request params");
     }
 
-    public Response serveRemoveTicketRequest(IHTTPSession session) {
+/*    public Response serveRemoveTicketRequest(IHTTPSession session) {
 
         Map<String, List<String>> requestParameters = session.getParameters();
 
@@ -202,9 +201,9 @@ public class Controller implements Serializable {
             try
         }
 
-    }
+    }*/
 
-    public static List<Ticket> deserializeLotteryTicketPool() {
+/*    public static List<Ticket> deserializeLotteryTicketPool() {
         List<Ticket> deserializeLotteryTicketPool = null;
         System.out.println("Please wait, entering backup.");
         try {
@@ -224,7 +223,42 @@ public class Controller implements Serializable {
         }
 
         return deserializeLotteryTicketPool;
+    }*/     // deserialization we no know
+
+    public void serializeIt(){
+        try {
+            FileOutputStream fos = new FileOutputStream("LotteryTicketPool.txt");
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            oos.writeObject(ticketPool);
+            oos.writeObject(ticketPool.ticketMap);
+            oos.writeObject(ticketPool.bettorMap);
+            oos.writeObject(ticketPool.agentMap);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
+    public static void deserializeIt(){
+
+        try {
+            FileInputStream fis = new FileInputStream("LotteryTicketPool.txt");
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            ticketPool = (TicketPool) ois.readObject();
+            ticketPool.ticketMap = (Map<Long, Ticket>) ois.readObject();
+            ticketPool.bettorMap = (Map<String, Bettor>) ois.readObject();
+            ticketPool.agentMap = (Map<Long, LotteryAgent>) ois.readObject();
+            ois.close();
+            fis.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
 }
 
