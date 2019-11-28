@@ -4,7 +4,6 @@ import programator.types.Bettor;
 import programator.types.LotteryAgent;
 import programator.types.Ticket;
 
-import java.util.List;
 import java.util.Map;
 
 public interface Poolable {
@@ -19,6 +18,8 @@ public interface Poolable {
     Ticket getTicket(Long id);
 
     void checkTicket(Long id);
+
+    void removeTicket(Long ticketId);
 
 
 }

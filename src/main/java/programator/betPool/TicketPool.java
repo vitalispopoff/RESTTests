@@ -38,4 +38,11 @@ public class TicketPool implements Poolable, Serializable {
     public Map<Long, Ticket> getAllTickets() {
         return ticketMap;
     }
+
+    @Override
+    public void removeTicket(Long ticketId){
+        ticketMap.remove(ticketId);
+    }
+
+
 }

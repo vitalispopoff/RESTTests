@@ -2,6 +2,7 @@ package programator.control;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import programator.betPool.Poolable;
 import programator.betPool.TicketPool;
 import programator.types.Ticket;
 
@@ -17,11 +18,11 @@ public class Controller implements Serializable {
     private final static String TICKET_ID_PARAMETER_NAME = "ticketId";
     private TicketPool ticketPool = new TicketPool();
 
-    public TicketPool getTicketPool(){
+    public TicketPool getTicketPool() {
         return ticketPool;
     }
 
-    public void setTicketPool(TicketPool ticketPool){
+    public void setTicketPool(TicketPool ticketPool) {
         this.ticketPool = ticketPool;
     }
 
@@ -104,8 +105,7 @@ public class Controller implements Serializable {
                 return newFixedLengthResponse(
                         BAD_REQUEST,
                         "text/plain",
-                        "Request parameter 'ticketId' gotta be a number"
-                );
+                        "Request parameter 'ticketId' gotta be a number");
             }
 
             Ticket ticket = ticketPool.getTicket(ticketId);
@@ -178,6 +178,30 @@ public class Controller implements Serializable {
         }
 
         return newFixedLengthResponse(BAD_REQUEST, "text/plain", "Uncorrected request params");
+    }
+
+    public Response serveRemoveTicketRequest(IHTTPSession session) {
+
+        Map<String, List<String>> requestParameters = session.getParameters();
+
+        if (requestParameters.containsKey(TICKET_ID_PARAMETER_NAME)) {
+            List<String> ticketIdParameters = requestParameters.get(TICKET_ID_PARAMETER_NAME);
+            String ticketIdParameter = ticketIdParameters.get(0);
+            long ticketId = 0;
+
+            try {
+                ticketId = Long.parseLong(ticketIdParameter);
+            } catch (NumberFormatException nfe) {
+                return newFixedLengthResponse(
+                        BAD_REQUEST,
+                        "text/plain",
+                        "Request parameter 'ticketId' gotta be a number");
+            }
+
+            TicketPool.removeTicket()
+            try
+        }
+
     }
 
     public static List<Ticket> deserializeLotteryTicketPool() {
