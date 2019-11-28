@@ -6,11 +6,15 @@ import programator.betPool.TicketPool;
 import programator.betPool.Poolable;
 import programator.types.Ticket;
 
+import java.util.List;
+import java.util.Map;
+
 import static fi.iki.elonen.NanoHTTPD.*;
-import static fi.iki.elonen.NanoHTTPD.Response.Status.INTERNAL_ERROR;
-import static fi.iki.elonen.NanoHTTPD.Response.Status.OK;
+import static fi.iki.elonen.NanoHTTPD.Response.Status.*;
 
 public class Controller {
+
+    private final static String TICKET_ID_PARAMETER_NAME = "ticketId";
 
     private Poolable ticketPool = new TicketPool();
 
@@ -42,7 +46,6 @@ public class Controller {
                 OK,
                 "text/plain",
                 "Congrats, Your ticket is in the pool now. \nIt's id: " + theTicketId);
-
     }
 
     public Response serveGetAllTicketsRequest(IHTTPSession session) {
@@ -57,19 +60,60 @@ public class Controller {
             return newFixedLengthResponse(
                     INTERNAL_ERROR,
                     "text/plain",
-                    "Internal error, can't read all the books, not at once"
+                    "Internal error, can't read all the tickets, not at once"
             );
         }
 
         return newFixedLengthResponse(
                 OK,
                 "application/json",
-                response
-        );
+                response);
     }
 
     public Response serveGetTicketRequest(IHTTPSession session) {
-        return null;
+
+        Map<String, List<String>> requestParameters = session.getParameters();
+
+        if (requestParameters.containsKey(TICKET_ID_PARAMETER_NAME)) {
+            List<String> ticketIdParameters = requestParameters.get(TICKET_ID_PARAMETER_NAME);
+            String ticketIdParameter = ticketIdParameters.get(0);
+            long ticketId = 0;
+
+            try {
+                ticketId = Long.parseLong(ticketIdParameter);
+            } catch (NumberFormatException nfe) {
+                return newFixedLengthResponse(
+                        BAD_REQUEST,
+                        "text/plain",
+                        "Request parameter 'ticketId' gotta be a number"
+                );
+            }
+
+            Ticket ticket = ticketPool.getTicket(ticketId);
+            if (ticket != null) {
+                try {
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    String response = objectMapper.writeValueAsString(ticket);
+                    return newFixedLengthResponse(
+                            OK,
+                            "application/json",
+                            response);
+
+                } catch (JsonProcessingException e) {
+                    System.err.println("Error in request process:\n" + e);
+                    return newFixedLengthResponse(
+                            INTERNAL_ERROR,
+                            "text/plain",
+                            "Internal error: can't get all the tickets"
+                    );
+                }
+            }
+
+            return newFixedLengthResponse(NOT_FOUND, "application/json", "¯\\_(ツ)_/¯");
+
+        }
+
+        return newFixedLengthResponse(BAD_REQUEST, "text/plain", "Uncorrected request params");
     }
 
     public Response serveCheckTicketRequest(IHTTPSession session) {

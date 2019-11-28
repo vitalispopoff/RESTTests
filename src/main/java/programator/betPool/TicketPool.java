@@ -10,19 +10,19 @@ import java.util.Map;
 public class TicketPool implements Poolable {
 
     private static Map<Long, Ticket> ticketMap = new HashMap<>();
-    private static Map<Long, Bettor> bettorMap = new HashMap<>();
+    private static Map<String, Bettor> bettorMap = new HashMap<String, Bettor>();
     private static Map<Long, LotteryAgent> agentMap = new HashMap<>();
 
 
     @Override
-    public Ticket getTicket(Long id) {
-        return ticketMap.get(id);
+    public Ticket getTicket(Long ticketId) {
+        return ticketMap.get(ticketId);
     }       // TODO try/catch for empty call
 
     @Override
     public void addTicket(Ticket ticket, Bettor bettor, LotteryAgent agent) {
         ticketMap.put(ticket.getTicketId(), ticket);
-        bettorMap.put(bettor.getBettorId(), bettor);
+        bettorMap.put(bettor.getBettorLogin(), bettor);
         agentMap.put(agent.getAgentId(), agent);
     }
 
