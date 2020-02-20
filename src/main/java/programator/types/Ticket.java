@@ -10,7 +10,6 @@ public class Ticket implements Serializable {
     private LotteryAgent agent;
     private boolean status = false;
 
-
     public long getTicketId() {
         return ticketId;
     }
