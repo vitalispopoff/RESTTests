@@ -5,12 +5,10 @@ import java.io.Serializable;
 public class LotteryAgent implements Serializable {
 
     private static Long agentNumbers = 1l;
-
     private Long agentId;
     private String name;
 
     public LotteryAgent() {
-//        super();
         this.agentId = agentNumbers++;
     }
 
