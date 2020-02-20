@@ -1,11 +1,7 @@
 package programator;
 
-import programator.betPool.TicketPool;
-import programator.types.Bettor;
-import programator.types.LotteryAgent;
-import programator.types.Ticket;
-
-import java.io.*;
+import programator.*;
+import java.io.*
 import java.util.Map;
 
 public interface Recoverable {
@@ -23,11 +19,9 @@ public interface Recoverable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     public static void deserializeIt() {
-
         try {
             FileInputStream fis = new FileInputStream("LotteryTicketPool.txt");
             ObjectInputStream ois = new ObjectInputStream(fis);
@@ -45,6 +39,4 @@ public interface Recoverable {
             e.printStackTrace();
         }
     }
-
-
 }
