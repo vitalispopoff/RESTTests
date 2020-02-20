@@ -1,12 +1,8 @@
 package programator.betPool;
 
-import programator.types.Bettor;
-import programator.types.LotteryAgent;
-import programator.types.Ticket;
-
+import programator.types.*;
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class TicketPool implements Poolable, Serializable {
 
@@ -42,6 +38,4 @@ public class TicketPool implements Poolable, Serializable {
     public void removeTicket(Long ticketId) {
         ticketMap.remove(ticketId);
     }
-
-
 }
