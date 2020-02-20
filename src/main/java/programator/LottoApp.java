@@ -1,11 +1,8 @@
 package programator;
 
-import fi.iki.elonen.NanoHTTPD;
-
-import java.io.File;
-import java.io.IOException;
-
 import static programator.Recoverable.deserializeIt;
+import java.io.*;
+import fi.iki.elonen.NanoHTTPD;
 
 public class LottoApp extends NanoHTTPD {
 
@@ -18,7 +15,6 @@ public class LottoApp extends NanoHTTPD {
     }
 
     public static void main(String[] args) {
-
         if (new File("LotteryTicketPool.srl").exists()) {
             try {
                 deserializeIt();
@@ -26,10 +22,8 @@ public class LottoApp extends NanoHTTPD {
                 e.printStackTrace();
             }
         }
-
         try {
             new LottoApp(8080);
-
         } catch (IOException e) {
             System.out.println("Server failed to start due to : \n");
         }
